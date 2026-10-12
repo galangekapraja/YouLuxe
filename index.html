@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="description" content="YouLuxe: try luxury watches on your own wrist with AI virtual try-on, then reserve with a personal concierge." />
+    <meta property="og:title" content="YouLuxe: Don't just browse. Wear it." />
+    <meta property="og:description" content="AI virtual try-on for luxury watches." />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>YouLuxe - Luxury Watch Parallax Experience</title>
+    <link rel="stylesheet" href="/src/style.css" />
+    <script>
+      window.YMKAsyncInit = function() {
+        console.log("YouCam SDK is ready to be initialized.");
+      };
+    </script>
+    <script src="https://plugins-media.makeupar.com/v2.5-camera-kit/sdk.js"></script>
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar">
+      <a href="#" class="logo" id="home-link">YouLuxe</a>
+      <button class="nav-btn">Virtual Try-On</button>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+      <!-- Background Video -->
+      <video class="bg-video" autoplay loop muted playsinline>
+        <source src="/hero-video.mp4" type="video/mp4">
+      </video>
+      <!-- Gradient Overlay -->
+      <div class="hero-overlay"></div>
+      
+      <!-- Content Layer -->
+      <div class="hero-content">
+        <h1>YouLuxe</h1>
+        <p>Don't just browse. Wear it.</p>
+        <button class="cta-btn" id="vto-trigger">Virtual Try-On</button>
+        <input type="file" id="vto-upload" accept="image/*" style="display: none;">
+      </div>
+
+      <!-- VTO Result Container -->
+      <div id="vto-result-container" style="display: none;">
+        
+        <!-- MOFU: Scanning State -->
+        <div id="vto-scanning-state">
+          <div class="scanner-wrapper">
+            <div class="scanner-line"></div>
+          </div>
+          <p>Calibrating Wrist Proportions...</p>
+        </div>
+
+        <!-- BOFU: Final Result State -->
+        <div id="vto-final-state" style="display: none;">
+          <img id="vto-result-img" src="" alt="Your Virtual Try-On">
+          <button class="cta-btn open-reserve-modal">Reserve Your Piece</button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Dismantle Section Removed -->
+
+    <!-- Watch Selection Modal -->
+    <div id="watch-selection-modal" style="display: none;">
+      <div class="modal-content" style="max-width: 600px;">
+        <button class="close-modal-btn" id="close-watch-selection-btn">&times;</button>
+        <h2>Curate Your Timepiece</h2>
+        <p style="margin-bottom: 2rem;">Select from our curated collection or upload your own design.</p>
+        
+        <div class="watch-selection-tabs" style="display: flex; gap: 1rem; margin-bottom: 1.5rem; justify-content: center;">
+           <button class="cta-btn tab-btn active" id="tab-preset" style="padding: 0.5rem 1rem; margin:0;">Preset Catalog</button>
+           <button class="cta-btn tab-btn" id="tab-custom" style="padding: 0.5rem 1rem; margin:0; background: transparent; color: #fff; border: 1px solid rgba(255,255,255,0.4);">Custom Upload</button>
+        </div>
+
+        <!-- Preset Catalog State -->
+        <div id="preset-catalog-state" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 1rem; justify-content: center; padding: 1rem 0;">
+           
+           <div class="preset-item" data-src="/assets/photo/catalog/media_1791240851246.png" style="cursor: pointer; border: 1px solid rgba(255,255,255,0.2); border-radius: 12px; padding: 15px; transition: all 0.3s; display: flex; flex-direction: column; align-items: center; background: rgba(255,255,255,0.02);">
+             <img src="/assets/photo/catalog/media_1791240851246.png" alt="Onyx Chronograph" style="width: 100px; height: 100px; object-fit: contain; margin-bottom: 10px;">
+             <span style="font-size: 0.8rem; font-family: 'Outfit', sans-serif; color: #fff; text-align: center;">Onyx Chrono</span>
+           </div>
+
+           <div class="preset-item" data-src="/assets/photo/catalog/media_1791240851255.png" style="cursor: pointer; border: 1px solid rgba(255,255,255,0.2); border-radius: 12px; padding: 15px; transition: all 0.3s; display: flex; flex-direction: column; align-items: center; background: rgba(255,255,255,0.02);">
+             <img src="/assets/photo/catalog/media_1791240851255.png" alt="Rose Gold Classic" style="width: 100px; height: 100px; object-fit: contain; margin-bottom: 10px;">
+             <span style="font-size: 0.8rem; font-family: 'Outfit', sans-serif; color: #fff; text-align: center;">Rose Gold</span>
+           </div>
+
+           <div class="preset-item" data-src="/assets/photo/catalog/media_1791240851289.png" style="cursor: pointer; border: 1px solid rgba(255,255,255,0.2); border-radius: 12px; padding: 15px; transition: all 0.3s; display: flex; flex-direction: column; align-items: center; background: rgba(255,255,255,0.02);">
+             <img src="/assets/photo/catalog/media_1791240851289.png" alt="Sapphire Elite" style="width: 100px; height: 100px; object-fit: contain; margin-bottom: 10px;">
+             <span style="font-size: 0.8rem; font-family: 'Outfit', sans-serif; color: #fff; text-align: center;">Sapphire Elite</span>
+           </div>
+
+           <div class="preset-item" data-src="/assets/photo/catalog/media_1791240851294.png" style="cursor: pointer; border: 1px solid rgba(255,255,255,0.2); border-radius: 12px; padding: 15px; transition: all 0.3s; display: flex; flex-direction: column; align-items: center; background: rgba(255,255,255,0.02);">
+             <img src="/assets/photo/catalog/media_1791240851294.png" alt="Titanium Diver" style="width: 100px; height: 100px; object-fit: contain; margin-bottom: 10px;">
+             <span style="font-size: 0.8rem; font-family: 'Outfit', sans-serif; color: #fff; text-align: center;">Titanium Diver</span>
+           </div>
+
+        </div>
+
+        <!-- Custom Upload State -->
+        <div id="custom-upload-state" style="display: none; flex-direction: column; align-items: center; gap: 1rem;">
+           <input type="file" id="custom-watch-upload" accept="image/*" style="display: none;">
+           <button class="cta-btn" id="btn-trigger-custom-watch" style="margin: 0;">Select Watch Image</button>
+           <img id="custom-watch-preview" src="" style="width: 120px; height: 120px; object-fit: contain; display: none; border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; padding: 10px;">
+           <button class="cta-btn" id="btn-confirm-custom-watch" style="display: none; margin: 0; background: #fff; color: #000;">Continue</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Collection / Catalog Section -->
+    <section class="catalog-section" id="catalog">
+      <div class="catalog-header">
+        <h2>The Exclusive Collection</h2>
+        <p>Explore our curated collection of luxury timepieces.</p>
+      </div>
+      <div class="catalog-grid">
+        <!-- Item 1 -->
+        <div class="catalog-item">
+          <div class="img-wrapper">
+            <img src="/assets/photo/catalog/media_1791240851246.png" alt="Onyx Chronograph">
+          </div>
+          <div class="item-info">
+            <h3>Onyx Chronograph</h3>
+            <p class="price">$12,500</p>
+            <p class="desc">A masterclass in precision. Featuring a matte black dial and brushed titanium casing.</p>
+            <button class="cta-btn small-btn open-reserve-modal">Reserve</button>
+          </div>
+        </div>
+        <!-- Item 2 -->
+        <div class="catalog-item">
+          <div class="img-wrapper">
+            <img src="/assets/photo/catalog/media_1791240851255.png" alt="Rose Gold Classic">
+          </div>
+          <div class="item-info">
+            <h3>Rose Gold Classic</h3>
+            <p class="price">$18,200</p>
+            <p class="desc">Elegance redefined. 18k rose gold perfectly complementing an obsidian leather strap.</p>
+            <button class="cta-btn small-btn open-reserve-modal">Reserve</button>
+          </div>
+        </div>
+        <!-- Item 3 -->
+        <div class="catalog-item">
+          <div class="img-wrapper">
+            <img src="/assets/photo/catalog/media_1791240851289.png" alt="Sapphire Elite">
+          </div>
+          <div class="item-info">
+            <h3>Sapphire Elite</h3>
+            <p class="price">$9,800</p>
+            <p class="desc">Deep blue dial protected by scratch-resistant domed sapphire crystal.</p>
+            <button class="cta-btn small-btn open-reserve-modal">Reserve</button>
+          </div>
+        </div>
+        <!-- Item 4 -->
+        <div class="catalog-item">
+          <div class="img-wrapper">
+            <img src="/assets/photo/catalog/media_1791240851294.png" alt="Titanium Diver">
+          </div>
+          <div class="item-info">
+            <h3>Titanium Diver</h3>
+            <p class="price">$14,000</p>
+            <p class="desc">Water-resistant to 300m, designed for the depths without compromising on luxury.</p>
+            <button class="cta-btn small-btn open-reserve-modal">Reserve</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- VTO Options Modal -->
+    <div id="vto-options-modal" style="display: none;">
+      <div class="modal-content">
+        <button class="close-modal-btn" id="close-vto-options-btn">&times;</button>
+        
+        <div id="vto-options-state">
+          <h2>Virtual Try-On</h2>
+          <p style="margin-bottom: 1.5rem;">Choose how you want to capture your wrist.</p>
+          
+          <!-- Elegant Instruction Panel for Upload/General -->
+          <div class="camera-instructions" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 15px; margin-bottom: 1.5rem; text-align: left; max-width: 400px; margin-left: auto; margin-right: auto; backdrop-filter: blur(5px);">
+             <h3 style="font-family: 'Outfit', sans-serif; font-size: 0.85rem; margin-bottom: 10px; color: #fff; letter-spacing: 2px; text-transform: uppercase;">Image Requirements</h3>
+             <ul style="font-size: 0.85rem; color: var(--text-muted); padding-left: 20px; margin: 0; line-height: 1.6;">
+               <li style="margin-bottom: 5px;">Photo must show the <strong>back of your wrist</strong> directly.</li>
+               <li>Ensure all <strong>five fingers are open</strong> and fully visible (do not form a fist).</li>
+             </ul>
+          </div>
+
+          <div class="vto-options-buttons" style="display: flex; flex-direction: column; gap: 1rem;">
+            <button class="cta-btn" id="btn-upload-device">Upload from Device</button>
+            <button class="cta-btn" id="btn-live-camera" style="background: transparent; color: #fff; border: 1px solid rgba(255, 255, 255, 0.4);">Use Live Camera</button>
+          </div>
+        </div>
+
+        <div id="vto-camera-state" style="display: none; width: 100%; height: 100%; min-height: 500px; padding-top: 10px;">
+          <h2 style="font-size: 1.8rem; margin-bottom: 0.5rem;">Capture Your Essence</h2>
+          
+          <!-- Elegant Instruction Panel -->
+          <div class="camera-instructions" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 15px; margin-bottom: 1.5rem; text-align: left; max-width: 400px; margin-left: auto; margin-right: auto; backdrop-filter: blur(5px);">
+             <h3 style="font-family: 'Outfit', sans-serif; font-size: 0.85rem; margin-bottom: 10px; color: #fff; letter-spacing: 2px; text-transform: uppercase;">AI Calibration Protocol</h3>
+             <ul style="font-size: 0.85rem; color: var(--text-muted); padding-left: 20px; margin: 0; line-height: 1.6;">
+               <li style="margin-bottom: 5px;">Face the <strong>back of your wrist</strong> directly toward the lens.</li>
+               <li style="margin-bottom: 5px;">Ensure all <strong>five fingers are open</strong> and fully visible in the frame (do not form a fist).</li>
+               <li>Hold steady; the intelligent lens will <strong>capture automatically</strong>.</li>
+             </ul>
+          </div>
+
+          <!-- HD Scaling Wrapper -->
+          <div id="ymk-scale-wrapper" style="margin: 0 auto 1.5rem auto; max-width: 400px; height: 480px; position: relative; overflow: hidden; border-radius: 12px; border: 1px solid rgba(255,255,255,0.2);">
+            <!-- The actual YMK module will be rendered at 2x size and scaled down 50% -->
+            <div id="YMK-module" style="width: 800px; height: 960px; transform: scale(0.5); transform-origin: top left; position: absolute; top: 0; left: 0;"></div>
+          </div>
+          
+          <button class="cta-btn" id="btn-cancel-camera" style="margin: 0 auto; background: transparent; color: #fff; border: 1px solid rgba(255, 255, 255, 0.4);">Return</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Reservation Modal -->
+    <div id="reservation-modal" style="display: none;">
+      <div class="modal-content">
+        <button class="close-modal-btn">&times;</button>
+        
+        <!-- Form State -->
+        <div id="reservation-form-state">
+          <h2>Reserve Your Piece</h2>
+          <p>Enter your details to secure your selected timepiece.</p>
+          <form id="reservation-form" name="reservation" method="POST">
+            <div class="input-group">
+              <input type="text" name="name" placeholder="Full Name" required>
+            </div>
+            <div class="input-group">
+              <input type="email" name="email" placeholder="Email Address" required>
+            </div>
+            <div class="input-group">
+              <input type="tel" name="whatsapp" placeholder="WhatsApp Number" required>
+            </div>
+            <button type="submit" class="cta-btn submit-btn">Confirm Reservation</button>
+          </form>
+        </div>
+
+        <!-- Success State -->
+        <div id="reservation-success-state" style="display: none;">
+          <h2>Reservation Secured.</h2>
+          <p>Our concierge will contact you shortly via WhatsApp to finalize your acquisition.</p>
+          <button class="cta-btn success-close-btn" style="margin-top: 2rem;">Close</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-content">
+        <h2>YouLuxe</h2>
+        <p>&copy; 2026 YouLuxe. All rights reserved.</p>
+      </div>
+    </footer>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
